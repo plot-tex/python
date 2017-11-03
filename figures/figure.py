@@ -1,10 +1,14 @@
 from __future__ import division
 
+# Author: Telmo de Menezes e Silva Filho <tmfilho@gmail.com>
+#
+# License: MIT
+
 import os
 
 
 class Figure:
-    def __init__(self, caption='', label='', placement='H', centering=True,
+    def __init__(self, caption='', label='', placement='h', centering=True,
                  pic_files=True):
         self._caption = caption
         self._label = label
@@ -51,11 +55,3 @@ class Figure:
                         f.write('\t\\hfill\n')
             f.write('\\end{figure}\n')
         return self
-
-
-if __name__ == '__main__':
-    from picture import Picture
-
-    fig = Figure()
-    fig.add_picture(Picture()).add_picture(Picture()).add_picture(Picture())
-    fig.print_figure(figure_name='test', path='../tables')
