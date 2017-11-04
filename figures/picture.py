@@ -5,7 +5,9 @@ from __future__ import division
 # License: MIT
 
 import numpy as np
+
 from symbolic import SymbolicIntervals3D
+from util.functions import parse_param
 
 
 class Picture:
@@ -57,7 +59,7 @@ class Picture:
         return picture
 
     def _apply_params(self):
-        options = ''
+        params_str = ''
         if self.params is not None:
             if 'legend' in self.params.keys():
                 pos = self.params['legend']['position']
@@ -65,15 +67,16 @@ class Picture:
                 legend = '\t\tlegend style={at={'
                 legend += '(axis cs:{},{})'.format(pos[0], pos[1])
                 legend += '},anchor=' + anchor + '},\n'
-                options += legend
-            for option in self.params:
-                if option != 'legend':
-                    value = options[option]
+                params_str += legend
+            for param in self.params:
+                if param != 'legend':
+                    value = self.params[param]
                     if value is None or value == '':
-                        options += '\t\t{},\n'.format(option)
+                        params_str += '\t\t{},\n'.format(param)
                     else:
-                        options += '\t\t{}={},\n'.format(option, value)
-        return options
+                        params_str += '\t\t{}={},\n'.format(param,
+                                                            parse_param(value))
+        return params_str
 
 
 def _hypercube():

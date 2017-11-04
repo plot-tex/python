@@ -39,6 +39,7 @@ class Figure:
                 f.write(self._pictures[0].print_picture() + '\n')
             elif len(self._pictures) > 1:
                 for i, picture in enumerate(self._pictures):
+                    sub_name = ''
                     if self._pic_files:
                         sub_name = figure_name + '-subfig-{}'.format(i + 1)
                         sub_filename = os.path.join(path, sub_name + '.tex')

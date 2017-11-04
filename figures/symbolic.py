@@ -4,10 +4,10 @@ from __future__ import division
 #
 # License: MIT
 
-from plot import Plot
+from plot import Plottable
 
 
-class SymbolicIntervals(Plot):
+class SymbolicIntervals(Plottable):
     def __init__(self, mins=None, maxs=None, legend=None, params=None):
         super(SymbolicIntervals, self).__init__(legend=legend, params=params)
         self._mins = mins
@@ -26,7 +26,7 @@ class SymbolicIntervals(Plot):
         return plot
 
 
-class SymbolicIntervals3D(Plot):
+class SymbolicIntervals3D(Plottable):
     def __init__(self, mins=None, maxs=None, legend=None, params=None):
         super(SymbolicIntervals3D, self).__init__(legend=legend, params=params)
         self._mins = mins
