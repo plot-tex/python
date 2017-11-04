@@ -1,6 +1,45 @@
 from __future__ import division
 
+# Author: Telmo de Menezes e Silva Filho <tmfilho@gmail.com>
+#
+# License: MIT
+
 import numpy as np
+from scipy.stats import bayes_mvs
+
+from plot import Plot
+
+
+class ConfidenceIntervals(Plot):
+    def __init__(self, values=None, alpha=0.95, b=1000,
+                 interval_type='normal', legend=None, params=None):
+        if interval_type not in ['normal', 'bootstrap']:
+            raise ValueError('Unknown interval type: {}. Please use choose '
+                             'normal or bootstrap intervals')
+        elif interval_type == 'bootstrap':
+            n = values.shape[1]
+            x = np.arange(n) + 1
+            y = np.zeros(n)
+            errors_y = np.zeros((n, 2))
+            for i in np.arange(n):
+                avg, r = _get_interval(values[:, i], b, 1.0 - alpha)
+                y[i] = avg
+                errors_y[i] = r
+        else:
+            n = values.shape[1]
+            x = np.arange(n) + 1
+            y = np.zeros(n)
+            errors_y = np.zeros((n, 2))
+            for i in np.arange(n):
+                res_mean, _, _ = bayes_mvs(values[:, i], alpha=alpha)
+                y[i] = res_mean.statistic
+                errors_y[i] = res_mean.minmax[1] - y[i]
+        super(ConfidenceIntervals, self).__init__(x=x, y=y, errors_x=None,
+                                                  errors_y=errors_y,
+                                                  legend=legend, params=params)
+        self.params['error bars'] = ''
+        self.params['y dir'] = 'both'
+        self.params['y explicit'] = ''
 
 
 def _get_interval(data, b, alpha=0.05):
@@ -9,39 +48,3 @@ def _get_interval(data, b, alpha=0.05):
     minimum = means[int(np.round(b * alpha / 2))]
     maximum = means[int(np.round(b * (1.0 - alpha / 2)))]
     return (minimum + maximum) / 2, (maximum - minimum) / 2
-
-
-def plot_confidence_intervals(data, labels, b, width, height, alpha=0.05):
-    print "\\begin{tikzpicture}"
-    print "     \\begin{axis}["
-    print "          width={}in,".format(width)
-    print "          height={}in,".format(height)
-    print "          scale only axis,"
-    print "          ylabel =$\\text{erro}$,"
-    print "          xtick distance=1,"
-
-    labels_str = "xticklabels={"
-    indices = ""
-    for i, label in enumerate(labels):
-        labels_str += label
-        indices += "{}".format(i + 1)
-        if i < (len(labels) - 1):
-            labels_str += ","
-            indices += ","
-    labels_str += "},xtick={" + indices + "}"
-
-    print "         " + labels_str
-    print "     ]"
-    print "     \\addplot["
-    print "          smooth,"
-    print "          mark=x,"
-    print "          only marks,"
-    print "          blue,"
-    print "          error bars/.cd, y dir=both, y explicit,"
-    print "     ] plot coordinates {"
-    for i, d in enumerate(data):
-        avg, r = _get_interval(d, b, alpha=alpha)
-        print "          ({},{})+=(0,{})-=(0,{})".format(i + 1, avg, r, r)
-    print "     };"
-    print "     \\end{axis}"
-    print "\\end{tikzpicture}"

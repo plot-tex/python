@@ -1,4 +1,6 @@
 import numpy as np
+from sklearn.datasets import make_moons
+from sklearn.datasets import make_blobs
 
 from figures.figure import Figure
 from figures.picture import Picture
@@ -6,6 +8,7 @@ from figures.symbolic import SymbolicIntervals3D
 from figures.plot import Plot
 from figures.plot import LinePlot
 from figures.plot import ScatterPlot
+from figures.confidence import ConfidenceIntervals
 
 
 if __name__ == '__main__':
@@ -91,4 +94,98 @@ if __name__ == '__main__':
         )
     )
 
-    fig.print_figure(figure_name='confidence')
+    fig.print_figure(figure_name='confidence1')
+
+    values = np.random.rand(100, 2)
+    values[:, 0] += 2.0
+    fig = Figure()
+    fig.add_picture(
+        Picture(
+            width='3in',
+            height='3in',
+            params={
+                'xticklabels': ['LVQ', 'PSO'],
+                'xtick': [1, 2]
+            }
+        ).add_plot(
+            ConfidenceIntervals(
+                values=values,
+                interval_type='normal',
+                legend='Normal',
+                params={
+                    'blue': '',
+                    'only marks': ''
+                }
+            )
+        ).add_plot(
+            ConfidenceIntervals(
+                values=values,
+                interval_type='bootstrap',
+                legend='Bootstrap',
+                params={
+                    'red': '',
+                    'only marks': ''
+                }
+            )
+        )
+    )
+
+    fig.print_figure(figure_name='confidence2')
+
+    X_moons, y_moons = make_moons(200)
+    X_blobs, y_blobs = make_blobs(200)
+
+    fig = Figure()
+    fig.add_picture(
+        Picture(
+            width='3in',
+            height='3in',
+        ).add_plot(
+            ScatterPlot(
+                x=X_moons[y_moons == 0, 0],
+                y=X_moons[y_moons == 0, 1],
+                legend='Class -',
+                params={
+                    'red': '',
+                    'mark': '-'
+                }
+            )
+        ).add_plot(
+            ScatterPlot(
+                x=X_moons[y_moons == 1, 0],
+                y=X_moons[y_moons == 1, 1],
+                legend='Class +',
+                params={
+                    'blue': '',
+                    'mark': '+'
+                }
+            )
+        )
+    ).add_picture(
+        Picture(
+            width='3in',
+            height='3in',
+        ).add_plot(
+            ScatterPlot(
+                x=X_blobs[y_blobs == 0, 0],
+                y=X_blobs[y_blobs == 0, 1],
+                legend='Class -',
+                params={
+                    'red': '',
+                    'mark': '-'
+                }
+            )
+        ).add_plot(
+            ScatterPlot(
+                x=X_blobs[y_blobs == 1, 0],
+                y=X_blobs[y_blobs == 1, 1],
+                legend='Class +',
+                params={
+                    'blue': '',
+                    'mark': '+'
+                }
+            )
+        )
+    )
+
+    fig.print_figure(figure_name='scatter')

@@ -55,10 +55,6 @@ class Plot(Plottable):
         self._y = y
         self._errors_x = errors_x
         self._errors_y = errors_y
-        if self._errors_x is None and self._errors_y is not None:
-            self._errors_x = np.zeros_like(self._errors_y)
-        if self._errors_y is None and self._errors_x is not None:
-            self._errors_y = np.zeros_like(self._errors_x)
 
     def print_plot(self):
         if self._errors_y is not None and ('error bars' not in self.params or
@@ -75,6 +71,10 @@ class Plot(Plottable):
                              'params are missing. Please supply the following '
                              'param values: "error bars", "x dir" and '
                              '"x explicit"')
+        if self._errors_x is None and self._errors_y is not None:
+            self._errors_x = np.zeros_like(self._errors_y)
+        if self._errors_y is None and self._errors_x is not None:
+            self._errors_y = np.zeros_like(self._errors_x)
 
         plot = '\t\\addplot[{}] coordinates '.format(self._apply_params())
         plot += '{\n'
