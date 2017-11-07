@@ -13,46 +13,46 @@ from util.functions import parse_param
 class Picture:
     def __init__(self, width='3in', height='3in', x_lims=None, y_lims=None,
                  z_lims=None, x_label='', y_label='', z_label='', params=None):
-        self._width = width
-        self._height = height
-        self._x_lims = x_lims
-        self._y_lims = y_lims
-        self._z_lims = z_lims
-        self._x_label = x_label
-        self._y_label = y_label
-        self._z_label = z_label
+        self.width_ = width
+        self.height_ = height
+        self.x_lims_ = x_lims
+        self.y_lims_ = y_lims
+        self.z_lims_ = z_lims
+        self.x_label_ = x_label
+        self.y_label_ = y_label
+        self.z_label_ = z_label
         self.params = params
-        self._plots = []
+        self.plots_ = []
 
     def add_plot(self, plot):
-        self._plots.append(plot)
+        self.plots_.append(plot)
         return self
 
     def print_picture(self):
         picture = '\\begin{tikzpicture}\n'
-        if np.any([type(plot) == SymbolicIntervals3D for plot in self._plots]):
+        if np.any([type(plot) == SymbolicIntervals3D for plot in self.plots_]):
             picture += _hypercube()
         picture += '\t\\begin{axis}[\n'
-        if self._x_lims is not None:
-            picture += '\t\txmin = {},\n'.format(self._x_lims[0])
-            picture += '\t\txmax = {},\n'.format(self._x_lims[1])
-        if self._y_lims is not None:
-            picture += '\t\tymin = {},\n'.format(self._y_lims[0])
-            picture += '\t\tymax = {},\n'.format(self._y_lims[1])
-        if self._z_lims is not None:
-            picture += '\t\tzmin = {},\n'.format(self._z_lims[0])
-            picture += '\t\tzmax = {},\n'.format(self._z_lims[1])
-        if self._x_label != '':
-            picture += '\t\txlabel = {},\n'.format(self._x_label)
-        if self._y_label != '':
-            picture += '\t\tylabel = {},\n'.format(self._y_label)
-        if self._z_label != '':
-            picture += '\t\tzlabel = {},\n'.format(self._z_label)
-        picture += '\t\twidth = {},\n'.format(self._width)
-        picture += '\t\theight = {},\n'.format(self._height)
+        if self.x_lims_ is not None:
+            picture += '\t\txmin = {},\n'.format(self.x_lims_[0])
+            picture += '\t\txmax = {},\n'.format(self.x_lims_[1])
+        if self.y_lims_ is not None:
+            picture += '\t\tymin = {},\n'.format(self.y_lims_[0])
+            picture += '\t\tymax = {},\n'.format(self.y_lims_[1])
+        if self.z_lims_ is not None:
+            picture += '\t\tzmin = {},\n'.format(self.z_lims_[0])
+            picture += '\t\tzmax = {},\n'.format(self.z_lims_[1])
+        if self.x_label_ != '':
+            picture += '\t\txlabel = {},\n'.format(self.x_label_)
+        if self.y_label_ != '':
+            picture += '\t\tylabel = {},\n'.format(self.y_label_)
+        if self.z_label_ != '':
+            picture += '\t\tzlabel = {},\n'.format(self.z_label_)
+        picture += '\t\twidth = {},\n'.format(self.width_)
+        picture += '\t\theight = {},\n'.format(self.height_)
         picture += self._apply_params()
         picture += '\t]\n'
-        for plot in self._plots:
+        for plot in self.plots_:
             picture += plot.print_plot()
         picture += '\t\\end{axis}\n'
         picture += '\\end{tikzpicture}'
